@@ -68,7 +68,7 @@ The implementation uses a reference voltage of 5 V and an amplifier gain
 of approximately 248 with Rg = 200 Ω.
 
 Circuit Architecture
-
+https://drive.google.com/file/d/1kQSypfHagTtcMN4RbzN2FQdbuqBrhnZS/view?usp=sharing
 
 The project also uses buffering and OP07-based circuitry to interface
 the DAC output and generate the required analog signal.
