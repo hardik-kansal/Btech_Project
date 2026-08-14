@@ -63,6 +63,11 @@ The implementation uses:
 -   Arduino UNO — digital control/interface
 
 
+## Results
+
+![Results](images/results.png)
+
+
 ## Circuit Architecture
 
 ![Circuit Architecture](images/diagram.png)
