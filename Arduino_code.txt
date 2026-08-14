@@ -1,0 +1,250 @@
+#include <SPI.h>
+
+const int CS_PIN = 10;   
+const int CLK_PIN = 7;   
+const int SOC_PIN = 9;   
+const int ALE_PIN = 12;  
+const int ADDR_PIN = 6;  
+const int EOC_PIN = 8;   
+const int OE_PIN = 4;   
+
+const float ADC_REF = 4.0952; 
+const float GAIN = 50.4;
+
+const float delta = ADC_REF/256;
+
+float output[100];
+int indexVal = 0;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(CLK_PIN, OUTPUT);
+  pinMode(SOC_PIN, OUTPUT);
+  pinMode(ALE_PIN, OUTPUT);
+  pinMode(ADDR_PIN, OUTPUT);
+  pinMode(OE_PIN, OUTPUT);
+  pinMode(EOC_PIN, INPUT);
+
+  for (int i = A0; i <= A5; i++) pinMode(i, INPUT);
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+
+  SPI.begin();
+  pinMode(CS_PIN, OUTPUT);
+  digitalWrite(CS_PIN, HIGH);
+}
+
+
+// DAC Write
+void writeMCP4802(byte channel, byte value, byte gainBit) {
+
+  byte highByte = (channel << 7)
+                | (0 << 6)
+                | ((gainBit & 0x1) << 5)
+                | (1 << 4)
+                | (value >> 4);
+
+  byte lowByte  = (value & 0x0F) << 4;
+
+  digitalWrite(CS_PIN, LOW);
+  SPI.transfer(highByte);
+  SPI.transfer(lowByte);
+  digitalWrite(CS_PIN, HIGH);
+}
+
+// Statistical Computation
+void computeStatistics(){
+
+  int N = indexVal;
+
+  float sum = 0;
+  float mean = 0;
+  float variance = 0;
+  float sd = 0;
+
+  float maxVal = output[0];
+  float minVal = output[0];
+
+  float signalPower = 0;
+  float noisePower = 0;
+
+  // Mean
+  for (int i = 0; i < N; i++) {
+    sum += output[i];
+  }
+  mean = sum / N;
+
+  // Standard deviation + Min Max
+  for (int i = 0; i < N; i++) {
+
+    variance += pow(output[i] - mean, 2);
+
+    if (output[i] > maxVal) maxVal = output[i];
+    if (output[i] < minVal) minVal = output[i];
+  }
+
+  sd = sqrt(variance / (N - 1));
+
+  // Relative Error
+  float delta_max = maxVal - minVal;
+  float RE = (delta_max / mean) * 100;
+
+  // SNR
+  for (int i = 0; i < N; i++) {
+    signalPower += pow(output[i], 2);
+    noisePower  += pow(output[i] - mean, 2);
+  }
+
+  float SNR = 10 * log10(signalPower / noisePower);
+
+  // ENOB
+  float ENOB = (SNR - 1.76) / 6.02;
+
+  Serial.println(" ");
+  Serial.println("------ Statistical Parameters ------");
+
+  Serial.print("Mean = ");
+  Serial.println(mean, 6);
+
+  Serial.print("Standard Deviation = ");
+  Serial.println(sd, 6);
+
+  Serial.print("Relative Error (%) = ");
+  Serial.println(RE, 6);
+
+  Serial.print("SNR (dB) = ");
+  Serial.println(SNR, 6);
+
+  Serial.print("ENOB = ");
+  Serial.println(ENOB, 6);
+}
+
+
+// ADC Sequence
+void performADCSequence() {
+
+  digitalWrite(OE_PIN, HIGH);
+
+  Serial.println("Stage 1");
+
+  digitalWrite(ALE_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(ALE_PIN, LOW);
+
+  digitalWrite(SOC_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(SOC_PIN, LOW);
+
+
+  for (int i = 0; i < 100; i++) {
+    digitalWrite(CLK_PIN, HIGH);
+    delayMicroseconds(100);
+    digitalWrite(CLK_PIN, LOW);
+    delayMicroseconds(100);
+  }
+
+  while (digitalRead(EOC_PIN) == LOW) {
+
+    digitalWrite(CLK_PIN, HIGH);
+    delayMicroseconds(100);
+    digitalWrite(CLK_PIN, LOW);
+    delayMicroseconds(100);
+  }
+
+
+  int bits[8];
+  for (int i = 0; i < 6; i++) bits[i] = digitalRead(A0 + i);
+  bits[6] = digitalRead(2);
+  bits[7] = digitalRead(3);
+
+  int number = 0;
+  for (int i = 0; i < 8; i++) number |= (bits[i] & 1) << i;
+
+  int d1 = number;
+
+  Serial.print("D1: ");
+  Serial.println(d1);
+
+  delayMicroseconds(2);
+
+  writeMCP4802(0, number-4, 0);
+  delay(5000); // imp
+
+  digitalWrite(ADDR_PIN, HIGH);
+
+
+  Serial.println("Stage 2");
+
+  digitalWrite(ALE_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(ALE_PIN, LOW);
+
+  digitalWrite(SOC_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(SOC_PIN, LOW);
+
+
+  for (int i = 0; i < 100; i++) {
+    digitalWrite(CLK_PIN, HIGH);
+    delayMicroseconds(100);
+    digitalWrite(CLK_PIN, LOW);
+    delayMicroseconds(100);
+  }
+
+  while (digitalRead(EOC_PIN) == LOW) {
+
+    digitalWrite(CLK_PIN, HIGH);
+    delayMicroseconds(100);
+    digitalWrite(CLK_PIN, LOW);
+    delayMicroseconds(100);
+  }
+
+
+  for (int i = 0; i < 6; i++) bits[i] = digitalRead(A0 + i);
+  bits[6] = digitalRead(2);
+  bits[7] = digitalRead(3);
+
+  number = 0;
+  for (int i = 0; i < 8; i++) number |= (bits[i] & 1) << i;
+
+  int d2 = number;
+
+  Serial.print("D2: ");
+  Serial.println(d2);
+
+  digitalWrite(OE_PIN, LOW);
+
+  float vf = (delta*d1)+(delta*d2)/GAIN;
+
+  Serial.print("Measured Voltage: ");
+  Serial.println(vf,5);
+
+
+  output[indexVal] = vf;
+  indexVal++;
+
+  digitalWrite(ADDR_PIN, LOW);
+
+
+  if(indexVal == 100){
+
+    Serial.println("------ 100 Values ------");
+
+    for(int i=0;i<100;i++){
+      Serial.println(output[i],5);
+    }
+
+    computeStatistics();
+
+    while(1);
+  }
+}
+
+
+void loop() {
+
+  performADCSequence();
+  delay(5000);
+}
