@@ -4,7 +4,8 @@ A B.Tech project at the Indian Institute of Technology Roorkee focused
 on experimentally validating a hardware-based error-correction technique
 to improve the effective resolution of an 8-bit ADC.
 
-Project Grade: 10/10
+Project Grade: 10/10 
+
 Supervisor: [Prof. Kishor Bhaskarrao Nandpurkar](https://iitr.ac.in/Departments/Electrical%20Engineering%20Department/People/Faculty/101085.html)
 
 ## Overview
@@ -55,23 +56,25 @@ Hardware Implementation
 The implementation uses:
 
 -   ADC0808 — 8-bit SAR ADC
--   DAC0808 — external DAC for reconstructing VDAC
+-   MCP4802 — external DAC for reconstructing VDAC
 -   AD620 — instrumentation amplifier used for amplification of the
     error
 -   OP07 — operational amplifier circuitry
 -   Arduino UNO — digital control/interface
--   External power supply
--   Multimeter
--   Breadboard-based circuit
 
-The implementation uses a reference voltage of 5 V and an amplifier gain
-of approximately 248 with Rg = 200 Ω.
 
-Circuit Architecture
-https://drive.google.com/file/d/1kQSypfHagTtcMN4RbzN2FQdbuqBrhnZS/view?usp=sharing
+## Circuit Architecture
 
-The project also uses buffering and OP07-based circuitry to interface
-the DAC output and generate the required analog signal.
+![Circuit Architecture](images/diagram.png)
+
+## [Video Demo link](https://drive.google.com/file/d/1kQSypfHagTtcMN4RbzN2FQdbuqBrhnZS/view?usp=sharing)
+
+
+## PCB 
+
+![PCB](images/pcb.jpg)
+
+
 
 
 

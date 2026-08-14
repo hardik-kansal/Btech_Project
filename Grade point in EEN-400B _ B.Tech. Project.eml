@@ -1,0 +1,136 @@
+Delivered-To: hardik_k@ee.iitr.ac.in
+Received: by 2002:a05:6000:14e:b0:45e:7c6b:f72b with SMTP id r14csp1422010wrx;
+        Wed, 20 May 2026 04:57:04 -0700 (PDT)
+X-Received: by 2002:a05:6a00:a80a:b0:81d:dd3a:b8f5 with SMTP id d2e1a72fcca58-83f33df50e2mr23882216b3a.38.1779278224315;
+        Wed, 20 May 2026 04:57:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779278224; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Tk3Qsi6g8654Fg29I7qGasG6SZheRo+7OHXUsiWbECcmK/7lHKh9d9NOubblXbN+8M
+         PnlwL/D5GtvPjwZ3J5w/g66b7X7zLmTCMYSw0+GEw0QcRFru3NT/xKF/cyGpF6UIKBsX
+         IV29Za6Xd0cRvhzMWMMzbX3T30QINdXCQF/T2yCxw6vCfGA+CQAu/rE5/dUax7RMNjM2
+         6J4VaSFLJe/GLwzQejPRgIKgebR/u+ng+ZzPHVzH/rupzGyguVqDWtOZxXwREorYfjuH
+         b5PDb0GKcieuCESdbem9EvPKrWdJ7r3hSlM0HvHmvPS88jfyxVd59FTCOML5ZiGmY718
+         PPDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:date:content-transfer-encoding:message-id:subject:to
+         :from:ironport-hdrordr:ironport-data:dkim-signature;
+        bh=zkaShSUqhkF3bT804NBjgTWormqmURc6QGnMbANVelc=;
+        fh=CAONQ+Fa58lKXLVI2BrAei8KyT9lOFDw20jBQTm9dVw=;
+        b=k2+NGPxBDLa5FtqrG81AF8VEnFg4lSNKbMn7HF2x4qFODictzsf+3/8I2V0xYCcslm
+         x2TqpV4vBCWcu09KuOM25vC9cq0j5Rs58VMlpNNcDG3etgTAVKJYoQIdRVBDq//uuvkk
+         YmX7Lbud+XQs7lhd1M6t6pZFwR0P5paevbg8dFK8bmTsfSzkWYzbi9QWdiLneBTqs+Lu
+         4pbheRWUV55jEZ0wsAyCGZRRvSxDt6+jxxMNWXkRlkFTkxz0QTNAaF3hxoZvsOtc3l3V
+         fnFa4ZaJnruIspeMstZVTHLl/vdIF35iFhgDW/OI6sQE+pnHmal2wOGpVbql2lwXipfJ
+         yBfQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass (test mode) header.i=@iitr.ac.in header.s=iitrselector header.b=NzeYq5sU;
+       spf=pass (google.com: domain of donotreply-acad@iitr.ac.in designates 103.37.200.79 as permitted sender) smtp.mailfrom=donotreply-acad@iitr.ac.in;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=iitr.ac.in
+Return-Path: <donotreply-acad@iitr.ac.in>
+Received: from IITRESA04.iitr.ac.in (IITRESA04.iitr.ac.in. [103.37.200.79])
+        by mx.google.com with ESMTP id d2e1a72fcca58-83f19c4cbbbsi35822530b3a.103.2026.05.20.04.57.03
+        for <hardik_k@ee.iitr.ac.in>;
+        Wed, 20 May 2026 04:57:04 -0700 (PDT)
+Received-SPF: pass (google.com: domain of donotreply-acad@iitr.ac.in designates 103.37.200.79 as permitted sender) client-ip=103.37.200.79;
+Authentication-Results: mx.google.com;
+       dkim=pass (test mode) header.i=@iitr.ac.in header.s=iitrselector header.b=NzeYq5sU;
+       spf=pass (google.com: domain of donotreply-acad@iitr.ac.in designates 103.37.200.79 as permitted sender) smtp.mailfrom=donotreply-acad@iitr.ac.in;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=iitr.ac.in
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=iitr.ac.in; s=iitrselector; t=1779278224;
+  h=from:to:subject:message-id:content-transfer-encoding:
+   date:mime-version;
+  bh=sshoMlVLARTpzqUEY40195iZ41tJ9bktN66ZKm0W4GU=;
+  b=NzeYq5sU5nBa2PNjkzahHeWUAHMB9/+wltjB/m2BrfkaAOSOmCOrvJBj
+   GfroO1QLv+IxL8WwcQQfSFHs2zXw44GTlpqdixraOwtOt7KdVxAijrrqa
+   Xl/nfmm9JkDAVEWw/o5fVESc5+anEHqm80yyM+tgomrFhmQV7VauhzJJp
+   M=;
+X-CSE-ConnectionGUID: SDalJPIATXyb86NElRTfeg==
+X-CSE-MsgGUID: 18PeOaqxQ9O7/YDATNAiyA==
+X-CSE-ConnectionGUID: /oJ6UHcWTuSgLG1JYTYEVA==
+X-CSE-MsgGUID: zOoEvELHQN+jfDeCo1uSRQ==
+X-ThreatScanner-Verdict: Negative
+IronPort-Data: A9a23:685/nK1u47xzOHXUTPbD5Ylwkn2cJEfYwER7XKvMYLTBsI5bp2YEm
+ zQdCm+GPvmIYmenKopzad/ipEtUvJ/dx99gGgI6qSg9HnlHl5H5CIXCJC8cHc8zwu7rERg7t
+ ZVOMrEsCOhuExcwcz/0auCJQUFUjPzOG/ylTraZZ0idfCc8IA85kxVvhuUltYBhhNm9Emult
+ Mj7yyHlEAbNNwVcbCROsMpvlDs15K6s4G5C5gRnDRx2lAS2e0c9Xcp3yZ6ZciOQrrl8RoaSW
+ +vFxbelyWLVlz9FIs+liLvybnoRSbfUOwWU4lIOM0R1qkEfzsCa+v9T2Ms0MS+7uR3Q9zxC4
+ IwlWaiLdOscFvakdNLx8/VvO3oW0aVuoNcrKJUk2CCZ5xSun3DEmp2CAKyqVGEV0r4fPI1Ay
+ RAXAHcKTE6+p+mJ/K+ARc1D3+YSEPjGAqpK7xmMzRmBZRonaaOaGfqMvZkAmm4F7ixMNa+PP
+ YxAN2opNUydJUQRZj/7C7pn9AusrnX4dTpEsl+Nobty6mPawCRw0aT3dtPePN2MLSlQthfE/
+ D2XoDulav0cHM64zheb31aMv8mMny3XVakVTaCDzMc/1TV/wURWUnX6T2CTofCjhk+9bNF3J
+ kFS+ysyt+47/wqqSLHVVhyjuHmeohcYc9tRD/d84QrLy6y83uqCLmEPRzJMbd0tr4k3RCAwk
+ FaC2dLvbdByjICopbum3u/8hVuP1eI9cQfuuQdsodM53uTe
+IronPort-HdrOrdr: A9a23:y7at/KG92Sj0lkvzpLqEi8eALOsnbusQ8zAXPidKJiC9E/b5qy
+ nAppomPHPP4wr5O0tApTnjAsW9qBrnnPZICOIqUItKMjONhFeV
+X-Talos-CUID: 9a23:YjrtD25j+KrF2QRE89sss0k2RP0FeULh0UzfB2DhK1dVeZCrYArF
+X-Talos-MUID: =?us-ascii?q?9a23=3AUJFjsA/MsXist7vDAt1RX+mQf9VP5ImwJWQtqLN?=
+ =?us-ascii?q?FuceoOAd3Yiqmtg3iFw=3D=3D?=
+X-IronPort-AV: E=Sophos;i="6.23,244,1770575400"; 
+   d="scan'208,217";a="94279774"
+Received: from academics.iitr.ac.in (HELO [127.0.0.1]) ([192.168.105.164])
+  by IITRESA02.iitr.ac.in with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 17:26:58 +0530
+From: AAO IITR <donotreply-acad@iitr.ac.in>
+To: hardik_k@ee.iitr.ac.in
+Subject: Grade point in EEN-400B : B.Tech. Project
+Message-ID: <9dc59b44-7618-711c-c1ab-b1c3f0c617b8@iitr.ac.in>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 20 May 2026 11:56:58 +0000
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+
+
+                    <div style=3D"font-family: Arial, sans-serif; padding:=
+ 20px; text-align: center; background-color: #f5f6fa;">
+                        <div style=3D"max-width: 550px; margin: auto; =
+border-radius: 10px; background: #ffffff; padding: 20px; box-shadow: 0 0 =
+10px rgba(0, 128, 255, 0.4); border-left: 5px solid #1a237e;">
+                           =20
+                            <!-- Logo + IIT =
+Roorkee Name -->
+                            <div style=3D"display: flex; =
+align-items: center; justify-content: start; margin-bottom: 20px;">
+                                <img src=3D"https://academics.iitr.ac.=
+in/assets/iitr_logo.png" alt=3D"IIT Roorkee" style=3D"width: 50px; height: =
+50px; margin-right: 15px;">
+                                <h2 =
+style=3D"color: #1a237e; margin: 0; font-size: 20px;">Academic Affairs =
+Office, IIT Roorkee</h2>
+                            </div>
+
+                            <p style=3D"font-size: 16px; color: #333; =
+text-align: left;">
+                                <b>Dear HARDIK KANSAL, =
+</b>
+                            </p>
+
+                            <p =
+style=3D"font-size: 16px; color: #333; text-align: left;">
+                                Your Grades in <b>EEN-400B: B.Tech. =
+Project</b> is <b>10</b>.
+                            </p>
+
+
+                            <hr style=3D"border: none; border-top: 1px =
+solid #ddd; margin: 30px 0 20px;">
+                            <div =
+style=3D"text-align: center;">
+                                <p =
+style=3D"font-size: 13px; color: #666; margin: 0;">
+                                    Best Wishes,<br>
+                                    <strong>Academic Affairs =
+Office</strong><br>
+                                    Indian Institute of=
+ Technology Roorkee
+                                </p>
+                                <p style=3D"font-size: 12px; color: #999; =
+margin-top: 8px;">
+                                    This is an automated=
+ message. Please do not reply to this email.
+                              =
+  </p>
+                            </div>
+                        </div>
+                    </div>
+                   =20
